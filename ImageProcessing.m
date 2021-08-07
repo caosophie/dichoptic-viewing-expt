@@ -9,42 +9,17 @@ end
 
 setGlobalx;
 
-% Get images
-folder = 'C:\Users\caoso\OneDrive\Desktop\images';
-I = dir(folder);
+%% Get images
+folder = 'C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\images';
+F = dir(folder);
 categories = [];
 
-for k = 3:numel(I)
-    subF = fullfile(I(k).folder, '\', I(k).name);
+for k = 3:numel(F)
+    subF = fullfile(F(k).folder, '\', F(k).name);
     p = struct2table(dir(fullfile(subF, '*png')));
     categories = [categories, p(:, 1)];
-    categories.Properties.VariableNames(k-2) = {I(k).name};
+    categories.Properties.VariableNames(k-2) = {F(k).name};
 end
-
-%% Preprocessing Image 
-
-% read image
-I = imread("dog.png");
-
-% make grayscale version of image
-I = rgb2gray(I);
-
-I = imresize(I, [320, 320]);
-
-% Get the dimensions of monochrome image
-[rows, columns] = size(I);
-
-% Size of each block 32x32
-[blockSizeR, blockSizeC] = deal(32); 
-
-wholeBlockRows = floor(rows / blockSizeR);
-blockVectorR = [blockSizeR * ones(1, wholeBlockRows), rem(rows, blockSizeR)];
-
-wholeBlockCols = floor(columns / blockSizeC);
-blockVectorC = [blockSizeC * ones(1, wholeBlockCols), rem(columns, blockSizeC)];
-
-% Create the cell array, ca.  
-cell_array = mat2cell(I, blockVectorR, blockVectorC);
 
 %% Function Call
 % Sequence number of blocks
@@ -56,9 +31,14 @@ idx = 1;
 for block = blocks_seq
     x = 0;
     while x < 10
+        I = getimage(categories);
+        cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
         % subplot(9, 10, plotIndex);
+        
         imshow(proc_image);
+        set(gcf, 'Position', get(0, 'Screensize'));
+        
         % cat = input('What did you see?', 's');
         cat = cell2mat(inputdlg('What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 'Input', [1 50]));
         
@@ -87,6 +67,54 @@ end
 function r = getGlobalx()
     global answer;
     r = answer;
+end
+
+%% Get random image
+function image = getimage(categories)
+   col = randi([1 4], 1);
+   row = randi([1 2], 1);
+   
+   if col == 1
+       fol = 'animals';
+   elseif col == 2
+       fol = 'city';
+   elseif col == 3
+       fol = 'human';
+   elseif col == 4
+       fol = 'nature';
+   elseif col == 5
+       fol = 'objects';
+   end
+   
+   image = categories{row, col};
+   image = strcat('images/', fol, '/', string(image)); 
+end
+
+%% Preprocess image
+
+function cell_array = preprocess(I)
+    % read image
+    I = imread(I);
+
+    % make grayscale version of image
+    I = rgb2gray(I);
+
+    I = imresize(I, [320, 320]);
+
+    % Get the dimensions of monochrome image
+    [rows, columns] = size(I);
+
+    % Size of each block 32x32
+    [blockSizeR, blockSizeC] = deal(32); 
+
+    wholeBlockRows = floor(rows / blockSizeR);
+    blockVectorR = [blockSizeR * ones(1, wholeBlockRows), rem(rows, blockSizeR)];
+
+    wholeBlockCols = floor(columns / blockSizeC);
+    blockVectorC = [blockSizeC * ones(1, wholeBlockCols), rem(columns, blockSizeC)];
+
+    % Create the cell array, ca.  
+    cell_array = mat2cell(I, blockVectorR, blockVectorC);
 end
 
 %% Keyboard answer inputs
