@@ -23,6 +23,7 @@ end
 
 %% Function Call
 % Sequence number of blocks
+% blocks_seq = 10:10:90;
 blocks_seq = 10:10:90;
 
 plotIndex = 1;
@@ -31,24 +32,20 @@ idx = 1;
 for block = blocks_seq
     x = 0;
     while x < 10
-        I = getimage(categories);
+        [I, fol] = getimage(categories);
         cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
-        % subplot(9, 10, plotIndex);
         
         imshow(proc_image);
         set(gcf, 'Position', get(0, 'Screensize'));
         
-        % cat = input('What did you see?', 's');
         cat = cell2mat(inputdlg('What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 'Input', [1 50]));
         
         while cat(1) ~= '2' && cat(1) ~= '4' && cat(1) ~= '6' && cat(1) ~= '8' && cat(1) ~= '0'
             cat = cell2mat(inputdlg('Enter a valid number', 'Input', [1 50]));
-            % cat = input('Enter a valid number. Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 's');
         end
         
-        keyboard(cat, idx);
-        % plotIndex = plotIndex + 1;
+        keyboard(cat, idx, fol);
         x = x + 1;
         idx = idx + 1;
         temp = getGlobalx;
@@ -61,7 +58,7 @@ final = getGlobalx;
 % categories = struct('animal', 2, 'landscape', 4, 'object', 6, 'human', 8); 
 function setGlobalx()
     global answer;
-    answer = strings(10, 9);
+    answer = zeros(10, 9);
 end
 
 function r = getGlobalx()
@@ -70,21 +67,12 @@ function r = getGlobalx()
 end
 
 %% Get random image
-function image = getimage(categories)
+function [image, fol] = getimage(categories)
    col = randi([1 4], 1);
    row = randi([1 2], 1);
    
-   if col == 1
-       fol = 'animals';
-   elseif col == 2
-       fol = 'city';
-   elseif col == 3
-       fol = 'human';
-   elseif col == 4
-       fol = 'nature';
-   elseif col == 5
-       fol = 'objects';
-   end
+   map = containers.Map([1 2 3 4 5], {'animals', 'city', 'human', 'nature', 'objects'});
+   fol = map(col);
    
    image = categories{row, col};
    image = strcat('images/', fol, '/', string(image)); 
@@ -94,7 +82,7 @@ end
 
 function cell_array = preprocess(I)
     % read image
-    I = imread(I);
+    I = imread(strcat('C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\', I));
 
     % make grayscale version of image
     I = rgb2gray(I);
@@ -118,19 +106,17 @@ function cell_array = preprocess(I)
 end
 
 %% Keyboard answer inputs
-function keyboard(cat, idx)
+function keyboard(cat, idx, fol)
     global answer;
-    if cat == '2'
-        answer(idx) = 'animal';
-    elseif cat == '4'
-        answer(idx) = 'nature';
-    elseif cat == '6'
-        answer(idx) = 'object';
-    elseif cat == '8'
-        answer(idx) = 'human';
-    elseif cat == '0'
-        answer(idx) = 'city';
+    
+    cont = containers.Map({'2', '4', '6', '8', '0'}, {'animals', 'nature', 'object', 'human', 'city'});
+    
+    if strcmp(cont(cat), fol)
+        answer(idx) = 1;
+    else
+        answer(idx) = 0;
     end
+    
 end
 
 %% Process Image
