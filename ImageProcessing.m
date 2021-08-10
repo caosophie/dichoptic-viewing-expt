@@ -21,6 +21,24 @@ for k = 3:numel(F)
     categories.Properties.VariableNames(k-2) = {F(k).name};
 end
 
+%% Setting Screen
+
+screenSize = get(0,'screensize');
+screenWidth = screenSize(3);
+screenHeight = screenSize(4);
+
+hFig = figure('Name','APP',...
+    'Numbertitle','off',...
+    'Position', [0 0 screenWidth screenHeight],...
+    'WindowStyle','modal',...
+    'Color',[0.5 0.5 0.5],...
+    'Toolbar','none');
+
+fpos = get(hFig,'Position')
+axOffset = (fpos(3:4)-[size(img,2) size(img,1)])/2;
+ha = axes('Parent',hFig,'Units','pixels',...
+            'Position',[axOffset size(img,2) size(img,1)]);
+        
 %% Function Call
 % Sequence number of blocks
 % blocks_seq = 10:10:90;
@@ -29,20 +47,25 @@ blocks_seq = 10:10:90;
 plotIndex = 1;
 idx = 1;
 
+prompt = "What did you see?" + newline + newline + "Enter 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city";
+
 for block = blocks_seq
     x = 0;
     while x < 10
         [I, fol] = getimage(categories);
         cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
+       
+        hImshow = imshow(proc_image,'Parent',ha);
         
-        imshow(proc_image);
-        set(gcf, 'Position', get(0, 'Screensize'));
+        pause(2);
         
-        cat = cell2mat(inputdlg('What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 'Input', [1 50]));
+        cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1]));
+        
+        % cat = cell2mat(inputdlg('What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 'Input', [1 50]));
         
         while cat(1) ~= '2' && cat(1) ~= '4' && cat(1) ~= '6' && cat(1) ~= '8' && cat(1) ~= '0'
-            cat = cell2mat(inputdlg('Enter a valid number', 'Input', [1 50]));
+            % cat = cell2mat(inputdlg('Enter a valid number', 'Input', [1 50]));
         end
         
         keyboard(cat, idx, fol);
@@ -132,10 +155,10 @@ function RD_img = pro_disp(ca, n_blocks, eye)
     for i = indices
         block = ca{i};
         
-        if eye == 'l'
+        if eye == 'r'
             % Red filter [R 0 0]
             ca{i} = cat(3, block, zeros(size(block)), zeros(size(block)));
-        elseif eye == 'r'
+        elseif eye == 'l'
             % Green filter [0 G 0]
             ca{i} = cat(3, zeros(size(block)), block, zeros(size(block)));
         end
@@ -154,7 +177,7 @@ function RD_img = pro_disp(ca, n_blocks, eye)
             
             % If not red, apply green filter
             if col < 3
-                if eye == 'l'
+                if eye == 'r'
                 % Green filter
                     ca{r,c} = cat(3, zeros(size(rgbBlock)), rgbBlock, zeros(size(rgbBlock)));
                 else
