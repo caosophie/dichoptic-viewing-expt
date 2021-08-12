@@ -41,6 +41,7 @@ ha = axes('Parent',hFig,'Units','pixels',...
         
 %% Function Call
 % Sequence number of blocks
+% blocks_seq = 10:10:90;
 blocks_seq = 10:10:90;
 
 plotIndex = 1;
@@ -50,7 +51,7 @@ prompt = "What did you see?" + newline + newline + "Enter 2 for animal, 4 for na
 
 for block = blocks_seq
     x = 0;
-    while x < 20
+    while x < 10
         [I, fol] = getimage(categories);
         cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
@@ -59,7 +60,9 @@ for block = blocks_seq
         
         pause(2);
         
-        cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1], hFig));
+        cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1]));
+        
+        % cat = cell2mat(inputdlg('What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city', 'Input', [1 50]));
         
         while cat(1) ~= '2' && cat(1) ~= '4' && cat(1) ~= '6' && cat(1) ~= '8' && cat(1) ~= '0'
             cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1]));
@@ -73,8 +76,6 @@ for block = blocks_seq
 end
 
 final = getGlobalx;
-close;
-functionPlot(final);
 
 %% Setting up variables
 % categories = struct('animal', 2, 'landscape', 4, 'object', 6, 'human', 8); 
@@ -150,7 +151,7 @@ function RD_img = pro_disp(ca, n_blocks, eye)
     % Random indices
     indices = randperm(numel(ca), n_blocks);
     
-    % Apply filter 
+    % Apply filter [R 0 0]
     for i = indices
         block = ca{i};
         
@@ -160,8 +161,6 @@ function RD_img = pro_disp(ca, n_blocks, eye)
         elseif eye == 'l'
             % Green filter [0 G 0]
             ca{i} = cat(3, zeros(size(block)), block, zeros(size(block)));
-        elseif eye == 'b'
-            ca{i} = zeros(32, 32, 'uint8');
         end
     end
     
@@ -181,7 +180,10 @@ function RD_img = pro_disp(ca, n_blocks, eye)
                 if eye == 'r'
                 % Green filter
                     ca{r,c} = cat(3, zeros(size(rgbBlock)), rgbBlock, zeros(size(rgbBlock)));
-                elseif eye == 'l'
+                elseif eye == 'b'
+                    ca{r,c}
+    
+                else
                     ca{r,c} = cat(3, rgbBlock, zeros(size(rgbBlock)), zeros(size(rgbBlock)));
                 end
             end

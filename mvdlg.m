@@ -1,4 +1,4 @@
-function Answer = mvdlg(prompt,title,position)
+function Answer = mvdlg(prompt,title,position, fig)
 %MVDLG moveable input dialog box.
 %  ANSWER = MVDLG(PROMPT,TITLE,POSITION) creates a dialog box that returns
 %  user input for a prompt in cell array ANSWER. PROMPT is a string. TITLE
@@ -56,5 +56,6 @@ uiwait(dialogWind);
     function cancCallback(hObject,eventdata)
         uiresume(dialogWind);
         close(dialogWind);
+        close(fig);
     end
 end
