@@ -8,7 +8,7 @@ Dichoptic visual training is often used as a treatment method for patients with 
 
 ### Methods
 
-In this experiment, the patient wears a pair of glasses with a red lens over their right eye and a green lens over their left. They are then shown an image with random patching patterns; as the image is divided into blocks, some of these blocks will be green, others will be red (see figure below). Depending on their amblyotic eye, the patient should usually be able to discern the blocks in one color better than the other. Why? Because the right eye viewing through the red lens will not be able to see the blocks with the red filter; and conversely, the left eye viewing through the green lens will not be able to see the blocks with the green filter. Each eye will only be able to see the blocks the opposite color of their lens. 
+In this experiment, the patient wears a pair of glasses with a red lens over their right eye and a green lens over their left. They are then shown an image with random patching patterns; as the image is divided into blocks, some of these blocks will be green, others will be red (see figure below). Depending on their amblyotic eye, the patient should usually be able to discern the blocks in one color better than the other. Why? Because the right eye viewing through the red lens will not be able to see the blocks with the green filter as it will mostly be black; and conversely, the left eye viewing through the green lens will not be able to see the blocks with the red filter. Each eye will only be able to see the blocks the same color of their lens. 
 
 **Therefore, in order to completely view the image, the amblyotic participant must use both of their eyes together.**
 
@@ -18,6 +18,6 @@ This task is then repeated 10 times for each of the 9 conditions : 1) 10 blocks 
 
 ***The goal is to see the psychometric function threshold for an accurate categorization of a randomly presented dichoptic image in amblyotic patients.***
 
-Left Amblyotic Eye | Right Amblyotic Eye
+Right Amblyotic Eye | Left Amblyotic Eye
 --- | ---
-![Screenshot (11)](https://user-images.githubusercontent.com/72232677/128728783-a2bdd052-d04a-49a0-bb38-2a58616d09eb.png) *Using primarily the right eye, the participant should see better or only the green blocks* | ![Screenshot (10)](https://user-images.githubusercontent.com/72232677/128729118-ccb884ff-7020-4a80-ac82-d52a5341e8ad.png) *Using primarily the left eye, the participant should see better or only the red blocks*
+![Screenshot (11)](https://user-images.githubusercontent.com/72232677/128728783-a2bdd052-d04a-49a0-bb38-2a58616d09eb.png) *Using primarily the left eye, the participant should see better or only the green blocks* | ![Screenshot (10)](https://user-images.githubusercontent.com/72232677/128729118-ccb884ff-7020-4a80-ac82-d52a5341e8ad.png) *Using primarily the right eye, the participant should see better or only the red blocks*
