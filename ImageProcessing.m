@@ -1,6 +1,6 @@
 %% Getting User Inputs
 
-prompt = 'Select amblyotic eye : L/R ';
+prompt = 'Select amblyotic eye : L/R/B ';
 tested_eye = lower(input(prompt, 's'));
 
 while tested_eye ~= 'r' && tested_eye ~= 'l' && tested_eye ~= 'b'
@@ -27,7 +27,7 @@ screenSize = get(0,'screensize');
 screenWidth = screenSize(3);
 screenHeight = screenSize(4);
 
-hFig = figure('Name','APP',...
+hFig = figure('Name','Screen',...
     'Numbertitle','off',...
     'Position', [0 0 screenWidth screenHeight],...
     'WindowStyle','modal',...
@@ -46,23 +46,23 @@ blocks_seq = 10:10:90;
 plotIndex = 1;
 idx = 1;
 
-prompt = "What did you see?" + newline + newline + "Enter 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city";
+prompt = "What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 for human or 0 for city";
 
 for block = blocks_seq
     x = 0;
-    while x < 20
+    while x < 10
         [I, fol] = getimage(categories);
         cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
        
         hImshow = imshow(proc_image,'Parent',ha);
         
-        pause(2);
+        pause(1);
         
-        cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1], hFig));
+        cat = cell2mat(mvdlg(prompt, 'Screen', [0 0 1 1], hFig));
         
         while cat(1) ~= '2' && cat(1) ~= '4' && cat(1) ~= '6' && cat(1) ~= '8' && cat(1) ~= '0'
-            cat = cell2mat(mvdlg(prompt, 'title', [0 0 1 1]));
+            cat = cell2mat(mvdlg(prompt, 'Screen', [0 0 1 1]));
         end
         
         keyboard(cat, idx, fol);
@@ -90,8 +90,8 @@ end
 
 %% Get random image
 function [image, fol] = getimage(categories)
-   col = randi([1 4], 1);
-   row = randi([1 2], 1);
+   col = randi([1 5], 1);
+   row = randi([1 10], 1);
    
    map = containers.Map([1 2 3 4 5], {'animals', 'city', 'human', 'nature', 'objects'});
    fol = map(col);
@@ -107,7 +107,7 @@ function cell_array = preprocess(I)
     I = imread(strcat('C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\', I));
 
     % make grayscale version of image
-    I = rgb2gray(I);
+    I = im2gray(I);
 
     I = imresize(I, [320, 320]);
 
@@ -154,10 +154,10 @@ function RD_img = pro_disp(ca, n_blocks, eye)
     for i = indices
         block = ca{i};
         
-        if eye == 'r'
+        if eye == 'l'
             % Red filter [R 0 0]
             ca{i} = cat(3, block, zeros(size(block)), zeros(size(block)));
-        elseif eye == 'l'
+        elseif eye == 'r'
             % Green filter [0 G 0]
             ca{i} = cat(3, zeros(size(block)), block, zeros(size(block)));
         elseif eye == 'b'
@@ -178,10 +178,10 @@ function RD_img = pro_disp(ca, n_blocks, eye)
             
             % If not red, apply green filter
             if col < 3
-                if eye == 'r'
+                if eye == 'l'
                 % Green filter
                     ca{r,c} = cat(3, zeros(size(rgbBlock)), rgbBlock, zeros(size(rgbBlock)));
-                elseif eye == 'l'
+                elseif eye == 'r'
                     ca{r,c} = cat(3, rgbBlock, zeros(size(rgbBlock)), zeros(size(rgbBlock)));
                 end
             end
