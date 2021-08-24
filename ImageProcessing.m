@@ -2,6 +2,8 @@
 
 prompt = 'Select amblyotic eye : L/R/B ';
 tested_eye = lower(input(prompt, 's'));
+name = input('Name of participant : ', 's');
+participant = input('Ambly/Control : ', 's');
 
 while tested_eye ~= 'r' && tested_eye ~= 'l' && tested_eye ~= 'b'
     tested_eye = lower(input(prompt, 's'));
@@ -50,7 +52,7 @@ prompt = "What did you see? Press 2 for animal, 4 for nature, 6 for object, 8 fo
 
 for block = blocks_seq
     x = 0;
-    while x < 10
+    while x < 20
         [I, fol] = getimage(categories);
         cell_array = preprocess(I);
         proc_image = pro_disp(cell_array, block, tested_eye);
@@ -74,13 +76,13 @@ end
 
 final = getGlobalx;
 close;
-functionPlot(final);
+functionPlot(final, name, participant);
 
 %% Setting up variables
 % categories = struct('animal', 2, 'landscape', 4, 'object', 6, 'human', 8); 
 function setGlobalx()
     global answer;
-    answer = zeros(10, 9);
+    answer = zeros(20, 9);
 end
 
 function r = getGlobalx()
