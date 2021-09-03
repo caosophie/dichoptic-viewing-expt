@@ -12,7 +12,7 @@ end
 setGlobalx;
 
 %% Get images
-folder = 'C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\images';
+folder = '\images';
 F = dir(folder);
 categories = [];
 
@@ -35,7 +35,7 @@ hFig = figure('Name','Screen',...
     'WindowStyle','modal',...
     'Color',[0.5 0.5 0.5],...
     'Toolbar','none');
-img = imread('C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\images\animals\dog.png');
+img = imread('\images\animals\dog.png');
 fpos = get(hFig,'Position')
 axOffset = (fpos(3:4)-[size(img,2) size(img,1)])/2;
 ha = axes('Parent',hFig,'Units','pixels',...
@@ -59,7 +59,7 @@ for block = blocks_seq
        
         hImshow = imshow(proc_image,'Parent',ha);
         
-        pause(1);
+        pause(60);
         
         cat = cell2mat(mvdlg(prompt, 'Screen', [0 0 1 1], hFig));
         
@@ -106,7 +106,7 @@ end
 
 function cell_array = preprocess(I)
     % read image
-    I = imread(strcat('C:\Users\caoso\OneDrive\Desktop\dichoptic-expt\', I));
+    I = imread(strcat('\dichoptic-expt\', I));
 
     % make grayscale version of image
     I = im2gray(I);
